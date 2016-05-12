@@ -4,6 +4,9 @@
 
 #include <stdio.h>
 
+#include <iostream>	
+using namespace std;
+
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
 __global__ void addKernel(int *c, const int *a, const int *b)
@@ -12,6 +15,7 @@ __global__ void addKernel(int *c, const int *a, const int *b)
     c[i] = a[i] + b[i];
 }
 
+/* UNCOMMENT WHEN USING CUDA */
 int main()
 {
     const int arraySize = 5;
@@ -36,6 +40,10 @@ int main()
         fprintf(stderr, "cudaDeviceReset failed!");
         return 1;
     }
+
+	else {
+		cout << "YIPEE!!" << endl;
+	}
 
     return 0;
 }
