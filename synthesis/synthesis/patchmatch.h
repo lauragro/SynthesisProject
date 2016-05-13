@@ -11,7 +11,18 @@ using namespace std;
 	#define MIN(a, b) ((a)<(b)?(a):(b))
 #endif
 
-class BITMAP;
+/* -------------------------------------------------------------------------
+BITMAP: Minimal image class
+------------------------------------------------------------------------- */
+
+class BITMAP {
+public:
+	int w, h;
+	int *data;
+	BITMAP(int w_, int h_) :w(w_), h(h_) { data = new int[w*h]; }
+	~BITMAP() { delete[] data; }
+	int *operator[](int y) { return &data[y*w]; }
+};
 
 #define XY_TO_INT(x, y) (((y)<<12)|(x))
 #define INT_TO_X(v) ((v)&((1<<12)-1))

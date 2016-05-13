@@ -18,18 +18,6 @@
 
 #include "patchmatch.h"
 
-/* -------------------------------------------------------------------------
-   BITMAP: Minimal image class
-   ------------------------------------------------------------------------- */
-
-class BITMAP { public:
-  int w, h;
-  int *data;
-  BITMAP(int w_, int h_) :w(w_), h(h_) { data = new int[w*h]; }
-  ~BITMAP() { delete[] data; }
-  int *operator[](int y) { return &data[y*w]; }
-};
-
 void check_im() {
 
 		//fprintf(stdout, "%d\n", system("identify a.png > null.txt"));	/* LAURA ADDED */
@@ -63,7 +51,10 @@ BITMAP * load_bitmap(const char *filename) {
 	unsigned char *p = (unsigned char *)ans->data;
 	for (int i = 0; i < w*h * 4; i++) {
 		int ch = fgetc(f);
-		if (ch == EOF) { fprintf(stderr, "Error reading image '%s': raw file is smaller than expected size %dx%dx4\n", filename, w, h, 4); exit(1); }
+		if (ch == EOF) { 
+			fprintf(stderr, "Error reading image '%s': raw file is smaller than expected size %dx%dx4\n", filename, w, h, 4); 
+			exit(1); 
+		}
 		*p++ = ch;
 
 		//	TESTING
@@ -92,7 +83,7 @@ void save_bitmap(BITMAP *bmp, const char *filename) {
 	if (system(buf) != 0) { fprintf(stderr, "Error writing image '%s': ImageMagick convert gave an error\n", filename); exit(1); }
 }
 
-/* -------------------------------------------------------------------------
+/*  -------------------------------------------------------------------------
 	PatchMatch, using L2 distance between upright patches that translate only
 	------------------------------------------------------------------------- */
 
