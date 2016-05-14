@@ -16,6 +16,7 @@ BITMAP * build_mask(BITMAP * image) {
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {
 
+			// testing
 			/*if ((*image)[i][j] != -1) {
 				if ((*image)[i][j] != -16777216){
 					int temp = (*image)[i][j];
@@ -60,7 +61,27 @@ int initial_fill(BITMAP * image, BITMAP * mask) {
 	return 0;
 }
 
-int e_step() {
+// reconstruct target with source
+BITMAP * e_step(BITMAP * source, BITMAP * target, BITMAP * mask, BITMAP * nnf, BITMAP * nnfd) {
+	int temp;
+	int w = target->w;
+	int h = target->h;
+
+	// capture the nearest neighbour field and distances to reconstruct target from source
+	patchmatch(target, source, nnf, nnfd);
+
+	// naive reconstruction
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w; j++) {
+
+			// replace target patch with nearest source patch
+			temp = (*nnf)[i][j];
+			if 
+			(*target)[i][j] = (*source)[INT_TO_X(temp)][INT_TO_Y(temp)];
+
+		}
+	}
+
 	return 0;
 }
 
@@ -102,6 +123,8 @@ int main(int argc, char *argv[]) {
 	save_bitmap(annd, argv[3]);*/
 
 	/* Hole filling algorithm derived from Image Melding */
+
+	// check parameters
 	argc--;
 	argv++;
 	if (argc != 1) {
@@ -109,21 +132,43 @@ int main(int argc, char *argv[]) {
 			"Where source is the image containing a magenta hole to be filled, outputs completed image."); 
 		exit(1);
 	}
+
+	// load source image
 	printf("Loading input image\n");
-	BITMAP *image = load_bitmap(argv[0]);	// load source image
+	BITMAP *source = load_bitmap(argv[0]);	// a copy for checking
+	BITMAP *image = load_bitmap(argv[0]);	// a copy for editing
+
+	// build mask: value<0 = hole, otherwise = not a hole
 	printf("Building mask\n");
-	BITMAP *mask = build_mask(image);	// <0 = hole, otherwise = not a hole
-	save_bitmap(mask, "mask.jpg");	// save mask to check results
+	BITMAP *mask = build_mask(image);		// TODO: build masks for all scales
+	save_bitmap(mask, "mask.jpg");			// save to check logic
+
 	printf("Running hole filling algorithm\n");
+
+	// reduce the size to fill hole with fewer details first
 	scale_down();	// not yet implemented
-	initial_fill(image, mask);	// initialize hole indices to diagonal neighbour's value (upper-left)
+	initial_fill(image, mask);	// initialize hole indices to diagonal neighbour's value (upper-left). TODO: use Laplace or similar instead
+
+	// implement an EM-algorithm
 	for (i = 0; i < num_scales; i++) {
+
+		// variables for capturing nearest neighbour field and distances at current scale
+		BITMAP *ann = NULL;
+		BITMAP *annd = NULL;
+
 		for (j = 0; j < num_em; j++) {
-			e_step();	// not yet implemented
+
+			e_step(source, image, mask, ann, annd);	// in progress
 			m_step();	// not yet implemented
 		}
-		output_image();
+
+		output_image(); // not yet implemented, probably redundant
 		upscale();	// not yet implemented
+
+		// clear variables from current scale
+		//delete ann;
+		//delete annd;
+		//delete image;
 	}
 	save_bitmap(image, "output.jpg");
 
