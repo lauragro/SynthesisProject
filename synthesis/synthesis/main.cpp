@@ -1,5 +1,25 @@
 #include "patchmatch.h"
 
+#define MAGENTA -65281
+
+// return the two's complement interpretation of a hex value
+int twos_complement(int hex_value) {
+	return hex_value - 0xffffff - 1;
+}
+
+// return the RGB values from a two's complement integer
+int * get_RGB(int value) {
+	int * rgb = new int[3];
+
+	//value += (0xffffff + 1);	// converting first from two's complement is redundant
+
+	rgb[0] = value & 0xff;			// red
+	rgb[1] = (value >> 8) & 0xff;	// green
+	rgb[2] = (value >> 16) & 0xff;	// blue
+
+	return rgb;
+}
+
 // use the source image to return a bitmap whose data is <0 corresponding to the hole to be filled
 BITMAP * build_mask(BITMAP * image) {
 	// create mask bitmap same size as image bitmap
@@ -12,6 +32,9 @@ BITMAP * build_mask(BITMAP * image) {
 	unsigned char *image_pointer = (unsigned char *)image->data;
 	unsigned char *mask_pointer = (unsigned char *)mask->data;
 
+	// testing
+	cout << 0xff00ff << endl;
+
 	// assign values to mask bitmap: <0 = hole, otherwise = not a hole
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {
@@ -23,8 +46,8 @@ BITMAP * build_mask(BITMAP * image) {
 				}
 			}*/
 
-			// if the image is magenta here
-			if ((*image)[i][j] == -65281) {
+			// if the image is magenta here: twos_complement(0xff00ff) = -65281
+			if ((*image)[i][j] == MAGENTA) {
 
 				// identify this point as a hole in the mask
 				(*mask)[i][j] = -1;
@@ -63,7 +86,8 @@ int initial_fill(BITMAP * image, BITMAP * mask) {
 
 // reconstruct target with source
 BITMAP * e_step(BITMAP * source, BITMAP * target, BITMAP * mask, BITMAP * nnf, BITMAP * nnfd) {
-	int temp;
+	int nn_coords, x, y, red, green, blue, ave, colour;
+	int * rgb;
 	int w = target->w;
 	int h = target->h;
 
@@ -75,17 +99,68 @@ BITMAP * e_step(BITMAP * source, BITMAP * target, BITMAP * mask, BITMAP * nnf, B
 		for (int j = 0; j < w; j++) {
 
 			// replace target patch with nearest source patch
-			temp = (*nnf)[i][j];
-			if 
-			(*target)[i][j] = (*source)[INT_TO_X(temp)][INT_TO_Y(temp)];
+			nn_coords = (*nnf)[i][j];
 
+			// if this element in the target is a hole
+			if ( (*mask)[i][j] < 0 ){
+
+				// find the average colour in the patch
+				x = INT_TO_X(nn_coords);	// x-coord of pixel at centre of patch
+				y = INT_TO_Y(nn_coords);	// y-coord of pixel at centre of patch
+				red = green = blue = 0;	// reset for new calculation
+
+				for (int ip = -patch_w / 2; ip < patch_w / 2; ip++) {
+					for (int jp = -patch_w / 2; jp < patch_w / 2; jp++) {
+
+						// get the current pixel colour
+						colour = (*source)[y + ip][x + jp];
+
+						// ignore values from the hole
+						if (colour != MAGENTA) {
+
+							// update the sums
+							rgb = get_RGB(colour);
+							red += rgb[0];
+							green += rgb[1];
+							blue += rgb[2];
+						}
+						
+						//ave += (*source)[y + ip][x + jp];
+					}
+				}
+
+				//ave = ave / (patch_w*patch_w);
+
+				// calculate the average colour using rgb values
+				ave = (red / (patch_w*patch_w))
+					+ ((green / (patch_w*patch_w)) << 8)
+					+ ((blue / (patch_w*patch_w)) << 16);
+
+				// fill the hole
+				(*target)[i][j] = ave;
+
+				//int average = (*source)[INT_TO_Y(temp)][INT_TO_X(temp)]
+				//(*target)[i][j] = (*source)[INT_TO_Y(temp)][INT_TO_X(temp)];	// TODO: use the average of pixels in NNF patch instead of hole patch
+			}
+			
+			// testing
+			//cout << (*mask)[i][j];
 		}
+
+		// testing
+		//cout << endl;
 	}
 
 	return 0;
 }
 
-int m_step() {
+// minimize the energy (screened poisson equation)
+int m_step(BITMAP * target) {
+
+	BITMAP * gradient = NULL;
+
+	
+
 	return 0;
 }
 
@@ -103,6 +178,9 @@ int main(int argc, char *argv[]) {
 	int num_scales, num_em, i, j;
 	num_scales = 1;
 	num_em = 1;
+
+	// testing
+	//int * rbg = get_RGB(-65280);
 
 	/* Patch Match algorithm to produce nearest neighbour field and distance matrix */
 	/*argc--;
@@ -158,11 +236,11 @@ int main(int argc, char *argv[]) {
 
 		for (j = 0; j < num_em; j++) {
 
-			e_step(source, image, mask, ann, annd);	// in progress
-			m_step();	// not yet implemented
+			e_step(source, image, mask, ann, annd);	// replaces hole patches with nnf patches. TODO: use channels and gradients like image melding does
+			m_step(image);	// in progress
 		}
 
-		output_image(); // not yet implemented, probably redundant
+		output_image(); // not yet implemented, probably redundant. TODO: use save_bitmap() instead
 		upscale();	// not yet implemented
 
 		// clear variables from current scale

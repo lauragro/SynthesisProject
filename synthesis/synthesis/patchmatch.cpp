@@ -87,10 +87,6 @@ void save_bitmap(BITMAP *bmp, const char *filename) {
 	PatchMatch, using L2 distance between upright patches that translate only
 	------------------------------------------------------------------------- */
 
-int patch_w = 7;
-int pm_iters = 5;
-int rs_max = INT_MAX;
-
 /* Measure distance between 2 patches with upper left corners (ax, ay) and (bx, by), terminating early if we exceed a cutoff distance.
 	You could implement your own descriptor here. */
 int dist(BITMAP *a, BITMAP *b, int ax, int ay, int bx, int by, int cutoff = INT_MAX)

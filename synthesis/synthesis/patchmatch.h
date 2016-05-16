@@ -28,7 +28,9 @@ public:
 #define INT_TO_X(v) ((v)&((1<<12)-1))
 #define INT_TO_Y(v) ((v)>>12)
 
-
+static const int patch_w = 7;
+static const int pm_iters = 5;
+static const int rs_max = INT_MAX;
 
 void check_im();
 BITMAP *load_bitmap(const char *filename);
