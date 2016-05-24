@@ -1,10 +1,10 @@
-﻿Build started 5/16/2016 2:46:46 PM.
+﻿Build started 5/24/2016 3:06:53 PM.
      1>Project "C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\synthesis\synthesis.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\include" /Zi /nologo /W3 /WX- /Od /D WIN32 /D WIN64 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /IC:\opencv\build\include /IC:\opencv\build\include\opencv2 /IC:\opencv\build\include\opencv /Ic:\opencv\build\x64\vc12\include /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\include" /Zi /nologo /W3 /WX- /Od /D WIN32 /D WIN64 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt main.cpp
          main.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\x64\Debug\synthesis.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\lib\x64" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\x64\Debug\synthesis.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\x64\Debug\synthesis.lib" /MACHINE:X64 x64\Debug\kernel.cu.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\x64\Debug\synthesis.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\opencv\build\include /LIBPATH:C:\opencv\build\include\opencv2 /LIBPATH:C:\opencv\build\include\opencv /LIBPATH:c:\opencv\build\x64\vc12\lib /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.5\lib\x64" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opencv_world310.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\x64\Debug\synthesis.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\x64\Debug\synthesis.lib" /MACHINE:X64 x64\Debug\kernel.cu.obj
          x64\Debug\main.obj
          x64\Debug\patchmatch.obj
          synthesis.vcxproj -> C:\Users\laura\Documents\USRA\SynthesisProject\synthesis\x64\Debug\synthesis.exe
@@ -20,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.94
+Time Elapsed 00:00:01.58
